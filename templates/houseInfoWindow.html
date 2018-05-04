@@ -1,0 +1,34 @@
+<div class="markerInfoWindow">
+
+    <!-- TODO: Ask Yotam what is "judgement"? -->
+
+    <p>
+        <span class="markerInfoWindow_label">Address: </span>{{parameter.zillowAddress}}
+    </p>
+
+    <p>
+        <span class="markerInfoWindow_label">Auction Number: </span>{{parameter.auctionNumber}}
+        <span class="markerInfoWindow_label">Docket Number: </span>{{parameter.docketNumber}}
+    </p>
+
+    <p>
+        <span class="markerInfoWindow_label">Sqft: </span>{{parameter.sqft | number:0}}
+        <span class="markerInfoWindow_label">Rooms: </span>{{parameter.rooms}}
+        <span class="markerInfoWindow_label">Baths: </span>{{parameter.bath}}
+    </p>
+
+    <p>
+        <span class="markerInfoWindow_label">Last Sold Price: </span>{{parameter.lastSoldPrice | currency:"$"}}
+        <span class="markerInfoWindow_label">Last Sold Date: </span>{{parameter.lastSoldDate}}
+    </p>
+
+    <p>
+        <span class="markerInfoWindow_label">Tax Estimate: </span>{{parameter.taxAssessment | currency:"$"}}
+        <span class="markerInfoWindow_label">Zillow Estimate: </span>{{parameter.zillowEstimate | currency:"$"}}
+    </p>
+
+    <p>
+        <span class="markerInfoWindow_label">Zillow Link: </span><a href="{{parameter.zillowLink}}" target="_blank" role="button">{{parameter.zillowLink | limitTo:42}}...</a>
+    </p>
+
+</div>

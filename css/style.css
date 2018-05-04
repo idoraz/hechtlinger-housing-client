@@ -1,0 +1,43 @@
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.form-control {
+    width: 60%;
+    display: inline-block;
+}
+
+#mapContainer {
+    margin: 20px 0;
+}
+
+/* Sets the map container height */
+.angular-google-map-container {
+    height: 600px;
+}
+
+.markerInfoWindow {
+    margin: 20px 15px;
+    text-align: left;
+}
+.markerInfoWindow_label {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+#alertBox {
+    margin: 5px 0 5px 0;
+}
+
+.appLoader {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: #495057 50% 50% no-repeat;
+    color: white;
+    opacity: 0.5;
+    overflow: hidden;
+    display: block;
+}
