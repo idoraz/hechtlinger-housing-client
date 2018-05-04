@@ -11,7 +11,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     $scope.map = {center: {latitude: 40.445, longitude: -79.997}, zoom: 11};
     $rootScope.houses = !_.isEmpty($localStorage.houses) && $localStorage.houses.length > 0 ? $localStorage.houses : [];
     $scope.ppmnts = !_.isEmpty($localStorage.ppmnts) && $localStorage.ppmnts.Pages.length > 0 ? $localStorage.ppmnts : [];
-    $scope.bdlst = !_.isEmpty($localStorage.bdlst) && $localStorage.bdlst.length > 0 ? $localStorage.bdlst : [];
+    $scope.bdlst = !_.isEmpty($localStorage.bdlst) && $localStorage.bdlst.Pages.length > 0 ? $localStorage.bdlst : [];
     $scope.mapOptions = {
         minZoom: 3,
         zoomControl: false,
