@@ -1,4 +1,4 @@
-myApp.factory('House', function($rootScope, $filter) {
+myApp.factory('House', function ($rootScope, $filter) {
 
     const bankRegex = /U\.?S\.?\sBANK|WELLS\sFARGO|DITECH\sFINANCIAL/gi;
     const taxLienRegex = /LIEN/gi;
@@ -24,11 +24,11 @@ myApp.factory('House', function($rootScope, $filter) {
             ok: listing[12]
         };
         this.municipality = listing[15].replace("Municipality: ", "");
-        this.address = listing[16].replace(new RegExp(",", 'g'),"");
+        this.address = listing[16].replace(new RegExp(",", 'g'), "");
         this.isDuplicate = isDuplicate;
         this.isFC = isFC;
         this.isBank = this.plaintiffName.match(bankRegex) ? true : false;
-        let lawFirmMatches =  this.attorneyName.replace(new RegExp(',', 'g'), '').match($rootScope.lawFirmsRegex);
+        let lawFirmMatches = this.attorneyName.replace(new RegExp(',', 'g'), '').match($rootScope.lawFirmsRegex);
         if (!_.isEmpty(lawFirmMatches) && _.isArray(lawFirmMatches)) {
             if ($rootScope.lawFirmsIndex.hasOwnProperty(lawFirmMatches[0])) {
                 this.firmName = $rootScope.lawFirms[$rootScope.lawFirmsIndex[lawFirmMatches[0]]]["Firm details"];
@@ -37,6 +37,7 @@ myApp.factory('House', function($rootScope, $filter) {
         }
         this.judgment = $rootScope.judgments[this.docketNumber] ? $rootScope.judgments[this.docketNumber] : '';
     }
+
     function HouseSetInstanceNoChecks(listing, isPP, isFC, isDuplicate) {
 
         this.isPP = isPP;
@@ -48,21 +49,21 @@ myApp.factory('House', function($rootScope, $filter) {
         this.saleType = listing[3] && listing[3].match(taxLienRegex) ? "T" : "M";
         this.saleDate = listing[4];
         this.saleStatus = listing[7];
-        this.ppDate = "";
+        this.ppDate = listing[8];
         this.costTax = listing[5].replace(new RegExp(" ", 'g'), "");
         this.cost = listing[6].replace(new RegExp(" ", 'g'), "");
-        this.reasonForPP = isPP ? listing[9] : "";
+        this.reasonForPP = listing.length > 9 ? listing[9] : "";
         this.checks = {
             svs: 'X',
             "3129": 'X',
             ok: 'X'
         };
         this.municipality = listing[listing.length - 2].replace("Municipality: ", "");
-        this.address = listing[listing.length - 1].replace(new RegExp(",", 'g'),"");
+        this.address = listing[listing.length - 1].replace(new RegExp(",", 'g'), "");
         this.isDuplicate = isDuplicate;
         this.isFC = isFC;
         this.isBank = this.plaintiffName.match(bankRegex) ? true : false;
-        let lawFirmMatches =  this.attorneyName.replace(new RegExp(',', 'g'), '').match($rootScope.lawFirmsRegex);
+        let lawFirmMatches = this.attorneyName.replace(new RegExp(',', 'g'), '').match($rootScope.lawFirmsRegex);
         if (!_.isEmpty(lawFirmMatches) && _.isArray(lawFirmMatches)) {
             if ($rootScope.lawFirmsIndex.hasOwnProperty(lawFirmMatches[0])) {
                 this.firmName = $rootScope.lawFirms[$rootScope.lawFirmsIndex[lawFirmMatches[0]]]["Firm details"];
@@ -74,12 +75,11 @@ myApp.factory('House', function($rootScope, $filter) {
     }
 
     return {
-        createNew: function(listing, isPP, isFC, isDuplicate) {
+        createNew: function (listing, isPP, isFC, isDuplicate) {
 
             if (listing.length >= 17) {
                 return new HouseSetInstance(listing, isPP, isFC, isDuplicate);
-            }
-            else {
+            } else {
                 return new HouseSetInstanceNoChecks(listing, isPP, isFC, isDuplicate);
             }
         }
