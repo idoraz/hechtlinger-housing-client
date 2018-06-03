@@ -389,8 +389,15 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     var getJudgments = function () {
         serverServices.getJudgments().then(function (response) {
             $rootScope.judgments = response;
+            setJudgments();
         });
     }
+    var setJudgments = function () {
+        for (let house of $rootScope.houses) {
+            house.judgment = $rootScope.judgments.hasOwnProperty(house.docketNumber) ? $rootScope.judgments[house.docketNumber] : house.judgment;
+        }
+    }
+
 
      /*************
      *** Events ***
