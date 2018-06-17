@@ -459,8 +459,6 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
             let requests = [];
 
-            requests.push(zillowServices.getZillowHouseDetails($rootScope.houses[333]));
-
             angular.forEach($rootScope.houses, function (house, key) {
                 requests.push(zillowServices.getZillowHouseDetails(house));
             });
