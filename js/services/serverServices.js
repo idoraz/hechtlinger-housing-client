@@ -23,7 +23,12 @@ myApp.factory('serverServices', function($http, $q, $templateCache) {
             //pdf2json lib need a timeout to grab the updated files
             setTimeout(function () {
                 promise.resolve($http.get('/parseHouses').then(function (response) {
-                    return response.data;
+                    if (response.error) {
+                        return response;
+                    }
+                    else {
+                        return response.data;
+                    }
                 }));
             }, 4000);
 

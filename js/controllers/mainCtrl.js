@@ -65,6 +65,9 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         try {
             serverServices.getHouses(link && link !== "" ? link : undefined).then(function (res) {
                 serverServices.parseHouses().then(function (res) {
+                    if (res.error) {
+                        $scope.vm.alerts.push({ type: 'danger', msg: res.message });
+                    }
                     serverServices.getBidListJson().then(function (res) {
                         $scope.bdlst = res.formImage;
                         serverServices.getPostponementsJson().then(function (res) {
@@ -135,7 +138,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             $timeout(function () {
                 URL.revokeObjectURL($scope.vm.url);
                 $scope.vm.url = undefined;
-            }, 1000 * 60 * 2);
+            }, 1000 * 60 * 20);
         }
         else {
             console.log('KML string is empty, download was aborted!');
@@ -464,9 +467,10 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             });
 
             $q.all(requests).then(function (response) {
-                if (!_.isEmpty($rootScope.invalidHouses) && $rootScope.invalidHouses.length > 0) {
-                    deleteInvalidHouses($rootScope.invalidHouses);
-                }
+                // TODO: Removed because we don't want to lose invalid houses. Instead we'll want to run them again in google
+                // if (!_.isEmpty($rootScope.invalidHouses) && $rootScope.invalidHouses.length > 0) {
+                //     deleteInvalidHouses($rootScope.invalidHouses);
+                // }
 
                 //TODO: Consider replacing KML handling with $scope.init()
                 $scope.vm.kml = parseToKml();
@@ -486,7 +490,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         }, function (error) {
             console.log(error.stack);
             $scope.vm.loading = false;
-            $scope.vm.alerts.push({ type: 'warning', msg: 'Houses failed to update!' });
+            $scope.vm.alerts.push({ type: 'danger', msg: 'Houses failed to update!' });
         });
 
     };
@@ -497,7 +501,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
         serverServices.exportExcel($rootScope.houses).then(function (response){
             if (response === 'Request failed') {
-                $scope.vm.alerts.push({ type: 'warning', msg: 'Houses failed to export!' });
+                $scope.vm.alerts.push({ type: 'danger', msg: 'Houses failed to export!' });
             }
             else {
                 $scope.vm.alerts.push({ type: 'success', msg: 'Houses were successfully exported to Excel!' });
@@ -508,7 +512,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     $scope.vm.backupHouses = function () {
         serverServices.backupHouses($rootScope.houses).then(function (response) {
             if (response === 'Request failed') {
-                $scope.vm.alerts.push({ type: 'warning', msg: 'Backup failed!' });
+                $scope.vm.alerts.push({ type: 'danger', msg: 'Backup failed!' });
             }
             else {
                 $scope.vm.alerts.push({ type: 'success', msg: 'Houses were successfully backed up to Excel!' });
