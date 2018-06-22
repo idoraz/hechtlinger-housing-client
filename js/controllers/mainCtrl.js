@@ -477,6 +477,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
                 downloadKml();
 
                 $scope.vm.saveHouses();
+                $scope.vm.backupHouses();
                 $scope.vm.loading = false;
 
                 if ($rootScope.invalidAddressCounter && $rootScope.invalidAddressCounter > 0) {
