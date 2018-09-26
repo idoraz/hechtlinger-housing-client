@@ -15,8 +15,8 @@
 
             <div class="input-append">
                 <!--<input type="text" ng-model="vm.pdfPath"
-                       placeholder="http://www.sheriffalleghenycounty.com/pdfs/bid_list/postpone.pdf"
-                       class="form-control">-->
+                placeholder="http://www.sheriffalleghenycounty.com/pdfs/bid_list/postpone.pdf"
+                class="form-control">-->
 
                 <button type="button" class="btn btn-primary" ng-click="vm.updateHousesOnMap();">
                     Update Houses
@@ -32,9 +32,11 @@
                 <button type="button" class="btn btn-success" ng-click="vm.exportXslx();" >
                     Create Excel
                 </button>
+                <a id="exportDownloadButton" download="{{ vm.exportFileName }}" ng-href="{{ vm.excelUrl }}" target="_self" ng-show="false"></a>
                 <button type="button" class="btn btn-default" style="color: white; background-color: #e83e8c" ng-click="vm.backupHouses();" >
                     Backup Houses
                 </button>
+                <a id="backupDownloadButton" download="backup_houses.xlsx" ng-href="{{ vm.backupUrl }}" target="_self" ng-show="false"></a>
             </div>
         </div>
     </div>
