@@ -87,10 +87,26 @@ myApp.factory('serverServices', function($http, $q, $templateCache) {
             }).then(function(response) {
                 return response.data;
             }, function(response) {
-                return response.data || 'Request failed';
+                return response.data || 'failed';
             });
             return promise;
 
+        },
+        downloadExcel: function (fileName) {
+
+            var promise = $http.get(`/downloadExcel/${fileName}`, { responseType: "arraybuffer" }).then(function (response) {
+                return response.data;
+            });
+            return promise;
+            
+        },
+        downloadBackup: function () {
+
+            var promise = $http.get(`/downloadBackup`, { responseType: "arraybuffer" }).then(function (response) {
+                return response.data;
+            });
+            return promise;
+            
         },
         getLawFirmJson: function () {
             var promise = $http.get('/getLawFirmJson').then(function (response) {

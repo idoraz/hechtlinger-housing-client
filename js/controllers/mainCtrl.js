@@ -1,14 +1,21 @@
-myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowServices', 'House', '$q', 'uiGmapGoogleMapApi', '$localStorage', '$filter','$timeout', function ($scope, $rootScope, serverServices, zillowServices, House, $q, uiGmapGoogleMapApi, $localStorage, $filter, $timeout) {
+myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowServices', 'House', '$q', 'uiGmapGoogleMapApi', '$localStorage', '$filter', '$timeout', function ($scope, $rootScope, serverServices, zillowServices, House, $q, uiGmapGoogleMapApi, $localStorage, $filter, $timeout) {
 
-     /**************
+    /**************
      *** Members ***
      **************/
 
     $scope.vm = {
         alerts: [],
         loading: false,
+        exportFileName: ""
     };
-    $scope.map = {center: {latitude: 40.445, longitude: -79.997}, zoom: 11};
+    $scope.map = {
+        center: {
+            latitude: 40.445,
+            longitude: -79.997
+        },
+        zoom: 11
+    };
     $rootScope.houses = !_.isEmpty($localStorage.houses) && $localStorage.houses.length > 0 ? $localStorage.houses : [];
     $scope.ppmnts = !_.isEmpty($localStorage.ppmnts) && $localStorage.ppmnts.Pages.length > 0 ? $localStorage.ppmnts : [];
     $scope.bdlst = !_.isEmpty($localStorage.bdlst) && $localStorage.bdlst.Pages.length > 0 ? $localStorage.bdlst : [];
@@ -30,7 +37,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     const addressRegex = /\b(p\.?\s?o\.?\b|post office|\d{1,5}|\s)\s*(?:\S\s*){8,50}(AK|Alaska|AL|Alabama|AR|Arkansas|AZ|Arizona|CA|California|CO|Colorado|CT|Connecticut|DC|Washington\sDC|Washington\D\.C\.|DE|Delaware|FL|Florida|GA|Georgia|GU|Guam|HI|Hawaii|IA|Iowa|ID|Idaho|IL|Illinois|IN|Indiana|KS|Kansas|KY|Kentucky|LA|Louisiana|MA|Massachusetts|MD|Maryland|ME|Maine|MI|Michigan|MN|Minnesota|MO|Missouri|MS|Mississippi|MT|Montana|NC|North\sCarolina|ND|North\sDakota|NE|New\sEngland|NH|New\sHampshire|NJ|New\sJersey|NM|New\sMexico|NV|Nevada|NY|New\sYork|OH|Ohio|OK|Oklahoma|OR|Oregon|PA|Pennsylvania|RI|Rhode\sIsland|SC|South\sCarolina|SD|South\sDakota|TN|Tennessee|TX|Texas|UT|Utah|VA|Virginia|VI|Virgin\sIslands|VT|Vermont|WA|Washington|WI|Wisconsin|WV|West\sVirginia|WY|Wyoming)(\s+|\&nbsp\;|\<(\S|\s){1,10}\>){1,5}\d{5}/i; //Address regex - the anchor where our listing ends
     const freeAndClearRegex = /F&C|F\s&\sC|FC|FREE\sAND\sCLEAR|FREE\s&\sCLEAR/gi;
 
-     /**************
+    /**************
      *** Methods ***
      **************/
 
@@ -50,9 +57,9 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
                 lawFirmsRegex += res[i]["Name on file"] + '|';
 
             }
-            lawFirmsRegex = lawFirmsRegex.substring(0, lawFirmsRegex.length-1);
+            lawFirmsRegex = lawFirmsRegex.substring(0, lawFirmsRegex.length - 1);
             $rootScope.lawFirmsRegex = new RegExp(lawFirmsRegex, 'gi');
-            refresh().then(function (){
+            refresh().then(function () {
                 $scope.vm.loading = false;
             });
         });
@@ -66,7 +73,10 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             serverServices.getHouses(link && link !== "" ? link : undefined).then(function (res) {
                 serverServices.parseHouses().then(function (res) {
                     if (res.error) {
-                        $scope.vm.alerts.push({ type: 'danger', msg: res.message });
+                        $scope.vm.alerts.push({
+                            type: 'danger',
+                            msg: res.message
+                        });
                     }
                     serverServices.getBidListJson().then(function (res) {
                         $scope.bdlst = res.formImage;
@@ -78,8 +88,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
                     });
                 });
             });
-        }
-        catch (ex) {
+        } catch (ex) {
             deferred.reject(ex);
         }
 
@@ -133,20 +142,78 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         $scope.vm.kml = parseToKml();
 
         if (!_.isEmpty($scope.vm.kml)) {
-            let blob = new Blob([ $scope.vm.kml ], { type : 'application/vnd.google-earth.kml+xml' });
-            $scope.vm.url = (window.URL || window.webkitURL).createObjectURL( blob );
-            $timeout(function () {
-                URL.revokeObjectURL($scope.vm.url);
-                $scope.vm.url = undefined;
-            }, 1000 * 60 * 20);
-        }
-        else {
+            let blob = new Blob([$scope.vm.kml], {
+                type: 'application/vnd.google-earth.kml+xml'
+            });
+            $scope.vm.url = (window.URL || window.webkitURL).createObjectURL(blob);
+            //TODO: I've cancelled the revoke of the download url if it doesn't give out memory leak issues we can delete this piece of code entirely
+            // $timeout(function () {
+            //     URL.revokeObjectURL($scope.vm.url);
+            //     $scope.vm.url = undefined;
+            // }, 1000 * 60 * 20);
+        } else {
             console.log('KML string is empty, download was aborted!');
         }
     };
+    var downloadExcel = function (fileName) {
+
+        if (fileName) {
+
+            serverServices.downloadExcel(fileName).then(function (response) {
+                if (response) {
+                    let blob = new Blob([response], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    });
+                    $scope.vm.excelUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+                    $timeout(function () {
+                        angular.element(exportDownloadButton)[0].click();
+                        $scope.vm.alerts.push({
+                            type: 'success',
+                            msg: 'Houses were successfully Downloaded!'
+                        });
+                        URL.revokeObjectURL($scope.vm.excelUrl);
+                        $scope.vm.excelUrl = undefined;
+                    }, 1000);
+                } else {
+                    $scope.vm.alerts.push({
+                        type: 'danger',
+                        msg: 'Houses failed to export!'
+                    });
+                }
+            });
+
+        }
+
+    }
+    var downloadBackup = function () {
+
+        serverServices.downloadBackup().then(function (response) {
+            if (response) {
+                let blob = new Blob([response], {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                });
+                $scope.vm.backupUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+                $timeout(function () {
+                    angular.element(backupDownloadButton)[0].click();
+                    $scope.vm.alerts.push({
+                        type: 'success',
+                        msg: 'Backup file was successfully Downloaded!'
+                    });
+                    URL.revokeObjectURL($scope.vm.backupUrl);
+                    $scope.vm.backupUrl = undefined;
+                }, 1000);
+            } else {
+                $scope.vm.alerts.push({
+                    type: 'danger',
+                    msg: 'Backup failed to download!'
+                });
+            }
+        });
+
+    }
 
     var checkGlblPPDate = function () {
-        
+
         if (!$scope.ppmnts || !$scope.ppmnts.Pages) return;
         $scope.glblPPDate = new Date(Date.parse(unescape($scope.ppmnts.Pages[1].Texts[1].R[0].T)));
     };
@@ -187,24 +254,21 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
                                 if (page.Texts[index + 1].R[0].T === "Y") {
                                     listing.push(unescape(page.Texts[index + 1].R[0].T));
                                     checksCounter++;
-                                }
-                                else {
+                                } else {
                                     listing.push("X");
                                 }
 
                                 if (page.Texts[index + 2].R[0].T === "Y") {
                                     listing.push(unescape(page.Texts[index + 2].R[0].T));
                                     checksCounter++;
-                                }
-                                else {
+                                } else {
                                     listing.push("X");
                                 }
 
                                 if (page.Texts[index + 3].R[0].T === "Y") {
                                     listing.push(unescape(page.Texts[index + 3].R[0].T));
                                     checksCounter++;
-                                }
-                                else {
+                                } else {
                                     listing.push("X");
                                 }
 
@@ -254,12 +318,10 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
                     if (checksCounter > 0) {
                         index += checksCounter + 1;
                         checksCounter = 0;
-                    }
-                    else {
+                    } else {
                         index++;
                     }
-                }
-                catch (ex) {
+                } catch (ex) {
                     console.log(ex.stack);
                     index++;
                 }
@@ -313,8 +375,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             stream.push('</Point></Placemark>');
 
             return stream.join("");
-        }
-        catch (ex) {
+        } catch (ex) {
             return "";
         }
     };
@@ -362,8 +423,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
             }
 
-        }
-        catch (ex) {
+        } catch (ex) {
             console.log(ex.stack);
             return "#mortgagePlacemark";
         }
@@ -374,14 +434,16 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
         let indices = [];
 
-        angular.forEach(houses, function (house, index){
+        angular.forEach(houses, function (house, index) {
             let i = $rootScope.houses.indexOf(house);
             if (i !== -1) {
                 indices.push(i);
             }
         });
 
-        indices = indices.sort(function(a, b){return a-b});
+        indices = indices.sort(function (a, b) {
+            return a - b
+        });
 
         for (let j = indices.length - 1; j >= 0; j--) {
             $rootScope.houses.splice(indices[j], 1);
@@ -401,15 +463,17 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         }
     }
 
-
-     /*************
+    /*************
      *** Events ***
      *************/
 
     uiGmapGoogleMapApi.then(function (maps) {
 
         $scope.map = {
-            center: {latitude: 40.445, longitude: -79.997},
+            center: {
+                latitude: 40.445,
+                longitude: -79.997
+            },
             zoom: 11,
             markerEvents: {
                 click: function (marker) {
@@ -484,28 +548,40 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
                     console.log($rootScope.invalidAddressCounter + ' houses were not found on Zillow');
                 }
 
-                $scope.vm.alerts.push({ type: 'success', msg: 'Houses were successfully updated!' });
+                $scope.vm.alerts.push({
+                    type: 'success',
+                    msg: 'Houses were successfully updated!'
+                });
 
             });
 
         }, function (error) {
             console.log(error.stack);
             $scope.vm.loading = false;
-            $scope.vm.alerts.push({ type: 'danger', msg: 'Houses failed to update!' });
+            $scope.vm.alerts.push({
+                type: 'danger',
+                msg: 'Houses failed to update!'
+            });
         });
 
     };
     $scope.vm.downloadKml = function () {
-        $scope.vm.alerts.push({ type: 'success', msg: 'KML was downloaded successfully!' });
+        $scope.vm.alerts.push({
+            type: 'success',
+            msg: 'KML was downloaded successfully!'
+        });
     }
     $scope.vm.exportXslx = function () {
 
-        serverServices.exportExcel($rootScope.houses).then(function (response){
-            if (response === 'Request failed') {
-                $scope.vm.alerts.push({ type: 'danger', msg: 'Houses failed to export!' });
-            }
-            else {
-                $scope.vm.alerts.push({ type: 'success', msg: 'Houses were successfully exported to Excel!' });
+        serverServices.exportExcel($rootScope.houses).then(function (response) {
+            if (response === 'failed') {
+                $scope.vm.alerts.push({
+                    type: 'danger',
+                    msg: 'Houses failed to export!'
+                });
+            } else {
+                $scope.vm.exportFileName = `${response}.xlsx`;
+                downloadExcel(response);
             }
         });
 
@@ -513,10 +589,12 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     $scope.vm.backupHouses = function () {
         serverServices.backupHouses($rootScope.houses).then(function (response) {
             if (response === 'Request failed') {
-                $scope.vm.alerts.push({ type: 'danger', msg: 'Backup failed!' });
-            }
-            else {
-                $scope.vm.alerts.push({ type: 'success', msg: 'Houses were successfully backed up to Excel!' });
+                $scope.vm.alerts.push({
+                    type: 'danger',
+                    msg: 'Backup failed!'
+                });
+            } else {
+                downloadBackup();                
             }
         });
     };
@@ -524,14 +602,17 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         $localStorage.houses = $rootScope.houses;
         $localStorage.ppmnts = $scope.ppmnts;
         $localStorage.bdlst = $scope.bdlst;
-        
+
         if (isProg) {
-            $scope.vm.alerts.push({ type: 'success', msg: 'Houses were saved!' });
+            $scope.vm.alerts.push({
+                type: 'success',
+                msg: 'Houses were saved!'
+            });
         }
 
     };
 
-    $scope.vm.closeAlert = function(index) {
+    $scope.vm.closeAlert = function (index) {
         $scope.vm.alerts.splice(index, 1);
     };
 
