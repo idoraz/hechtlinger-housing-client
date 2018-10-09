@@ -1,15 +1,29 @@
-myApp.factory('serverServices', function($http, $q, $templateCache) {
+myApp.factory('serverServices', function ($http, $q, $templateCache) {
     var myService = {
+
+        env: "dev",
+
+        getEnvUrl: function (env) {
+            const envs = {
+                dev: {
+                    url: "http://localhost:3000"
+                },
+                prod: {
+                    url: "http://18.223.26.231:3000"
+                }
+            };
+            return envs[env].url;
+        },
 
         getHouses: function (link) {
 
             if (link && link !== "") {
-                var promise = $http.get('/getHouses/:' + link).then(function (response) {
+                var promise = $http.get(`${this.getEnvUrl(this.env)}/getHouses`).then(function (response) {
                     return response.data;
                 });
             }
             else {
-                var promise = $http.get('/getHouses').then(function (response) {
+                var promise = $http.get(`${this.getEnvUrl(this.env)}/getHouses`).then(function (response) {
                     return response.data;
                 });
             }
@@ -20,9 +34,11 @@ myApp.factory('serverServices', function($http, $q, $templateCache) {
 
             var promise = $q.defer();
 
+            const that = this;
+            
             //pdf2json lib need a timeout to grab the updated files
             setTimeout(function () {
-                promise.resolve($http.get('/parseHouses').then(function (response) {
+                promise.resolve($http.get(`${that.getEnvUrl(that.env)}/parseHouses`).then(function (response) {
                     if (response.error) {
                         return response;
                     }
@@ -36,9 +52,9 @@ myApp.factory('serverServices', function($http, $q, $templateCache) {
 
         },
 
-        getPostponementsJson: function() {
+        getPostponementsJson: function () {
 
-            var promise = $http.get('/getPostponementsJson').then(function (response) {
+            var promise = $http.get(`${this.getEnvUrl(this.env)}/getPostponementsJson`).then(function (response) {
                 return response.data;
             });
             return promise;
@@ -58,7 +74,7 @@ myApp.factory('serverServices', function($http, $q, $templateCache) {
         },
         getBidListJson: function() {
 
-            var promise = $http.get('/getBidListJson').then(function (response) {
+            var promise = $http.get(`${this.getEnvUrl(this.env)}/getBidListJson`).then(function (response) {
                 return response.data;
             });
             return promise;
@@ -81,12 +97,12 @@ myApp.factory('serverServices', function($http, $q, $templateCache) {
 
             var promise = $http({
                 method: 'POST',
-                url: '/exportExcel',
+                url: `${this.getEnvUrl(this.env)}/exportExcel`,
                 data: houses,
                 cache: $templateCache
-            }).then(function(response) {
+            }).then(function (response) {
                 return response.data;
-            }, function(response) {
+            }, function (response) {
                 return response.data || 'failed';
             });
             return promise;
@@ -94,7 +110,7 @@ myApp.factory('serverServices', function($http, $q, $templateCache) {
         },
         downloadExcel: function (fileName) {
 
-            var promise = $http.get(`/downloadExcel/${fileName}`, { responseType: "arraybuffer" }).then(function (response) {
+            var promise = $http.get(`${this.getEnvUrl(this.env)}/downloadExcel/${fileName}`, { responseType: "arraybuffer" }).then(function (response) {
                 return response.data;
             });
             return promise;
@@ -102,21 +118,21 @@ myApp.factory('serverServices', function($http, $q, $templateCache) {
         },
         downloadBackup: function () {
 
-            var promise = $http.get(`/downloadBackup`, { responseType: "arraybuffer" }).then(function (response) {
+            var promise = $http.get(`${this.getEnvUrl(this.env)}/downloadBackup`, { responseType: "arraybuffer" }).then(function (response) {
                 return response.data;
             });
             return promise;
             
         },
         getLawFirmJson: function () {
-            var promise = $http.get('/getLawFirmJson').then(function (response) {
+            var promise = $http.get(`${this.getEnvUrl(this.env)}/getLawFirmJson`).then(function (response) {
                 return response.data;
             });
             return promise;
         },
 
         getJudgments: function () {
-            var promise = $http.get('/getJudgments').then(function (response) {
+            var promise = $http.get(`${this.getEnvUrl(this.env)}/getJudgments`).then(function (response) {
                 return response.data;
             });
             return promise;
@@ -126,12 +142,12 @@ myApp.factory('serverServices', function($http, $q, $templateCache) {
 
             var promise = $http({
                 method: 'POST',
-                url: '/backupHouses',
+                url: `${this.getEnvUrl(this.env)}/backupHouses`,
                 data: houses,
                 cache: $templateCache
-            }).then(function(response) {
+            }).then(function (response) {
                 return response.data;
-            }, function(response) {
+            }, function (response) {
                 return response.data || 'Request failed';
             });
             return promise;

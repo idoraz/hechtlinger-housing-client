@@ -6,13 +6,22 @@ myApp.factory('zillowServices', function ($rootScope, $http, $q, $filter) {
             let address = "";
             let zipCode = "";
             $rootScope.invalidHouses = [];
+            const envs = {
+                dev: {
+                    url: "http://127.0.0.1:3000"
+                },
+                prod: {
+                    url: "http://18.223.26.231:3000"
+                }
+            };
+            const url = envs.prod.url;
 
             house.address = house.address.replace("undefined", "");
             var matchRes = house.address.match(/\b\d{5}\b/g);
             zipCode = matchRes && matchRes.length > 0 ? house.address.match(/\b\d{5}\b/g) : "";
             address = house.address.replace(zipCode, "");
 
-            $http.get('/getZillowHouseDetails?address=' + address + '&zipCode=' + zipCode).then(function (response) {
+            $http.get(`${url}/getZillowHouseDetails?address=${address}&zipCode=${zipCode}`).then(function (response) {
 
                 if (!_.isEmpty(response) && !_.isEmpty(response.data) && !_.isEmpty(response.data.response) && !_.isEmpty(response.data.response.results) && !_.isEmpty(response.data.response.results.result) && _.isArray(response.data.response.results.result)) {
 
