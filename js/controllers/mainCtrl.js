@@ -456,12 +456,12 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             $rootScope.judgments = response;
             setJudgments();
         });
-    }
+    };
     var setJudgments = function () {
         for (let house of $rootScope.houses) {
             house.judgment = $rootScope.judgments.hasOwnProperty(house.docketNumber) ? $rootScope.judgments[house.docketNumber] : house.judgment;
         }
-    }
+    };    
 
     /*************
      *** Events ***
@@ -614,6 +614,11 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
     $scope.vm.closeAlert = function (index) {
         $scope.vm.alerts.splice(index, 1);
+    };
+
+    $scope.vm.saveHouse = function () {
+        const houses = $scope.houses[0];
+        serverServices.saveHouse(houses);
     };
 
 

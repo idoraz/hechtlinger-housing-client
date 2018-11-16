@@ -152,6 +152,20 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
             });
             return promise;
 
+        },
+
+        saveHouse: function (houses) {
+            var promise = $http({
+                method: 'POST',
+                url: `${this.getEnvUrl(this.env)}/saveHouse`,
+                data: houses,
+                cache: $templateCache
+            }).then(function (response) {
+                return response.data;
+            }, function (response) {
+                return response.data || 'Request failed';
+            });
+            return promise;
         }
 
     };
