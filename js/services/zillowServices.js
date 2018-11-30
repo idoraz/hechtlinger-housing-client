@@ -8,13 +8,13 @@ myApp.factory('zillowServices', function ($rootScope, $http, $q, $filter) {
             $rootScope.invalidHouses = [];
             const envs = {
                 dev: {
-                    url: "http://127.0.0.1:3000"
+                    url: "http://127.0.0.1:3004"
                 },
                 prod: {
                     url: "http://18.223.26.231:3000"
                 }
             };
-            const url = envs.prod.url;
+            const url = envs.dev.url;
 
             house.address = house.address.replace("undefined", "");
             var matchRes = house.address.match(/\b\d{5}\b/g);

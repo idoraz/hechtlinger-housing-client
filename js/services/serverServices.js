@@ -6,7 +6,7 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
         getEnvUrl: function (env) {
             const envs = {
                 dev: {
-                    url: "http://localhost:3000"
+                    url: "http://localhost:3004"
                 },
                 prod: {
                     url: "http://18.223.26.231:3000"

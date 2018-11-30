@@ -42,7 +42,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
      **************/
 
     $scope.init = function () {
-        console.log($rootScope.houses); //For debugging
+        console.log($rootScope.houses); //For debugging        
         $scope.vm.loading = true;
         checkGlblPPDate();
         $scope.vm.kml = parseToKml();
@@ -615,6 +615,5 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     $scope.vm.closeAlert = function (index) {
         $scope.vm.alerts.splice(index, 1);
     };
-
 
 }]);
