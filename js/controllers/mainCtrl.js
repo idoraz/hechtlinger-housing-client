@@ -146,12 +146,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             let blob = new Blob([$scope.vm.kml], {
                 type: 'application/vnd.google-earth.kml+xml'
             });
-            $scope.vm.url = (window.URL || window.webkitURL).createObjectURL(blob);
-            //TODO: I've cancelled the revoke of the download url if it doesn't give out memory leak issues we can delete this piece of code entirely
-            // $timeout(function () {
-            //     URL.revokeObjectURL($scope.vm.url);
-            //     $scope.vm.url = undefined;
-            // }, 1000 * 60 * 20);
+            $scope.vm.url = (window.URL || window.webkitURL).createObjectURL(blob);            
         } else {
             console.log('KML string is empty, download was aborted!');
         }
@@ -616,5 +611,11 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     $scope.vm.closeAlert = function (index) {
         $scope.vm.alerts.splice(index, 1);
     };
+
+    $scope.$on("$destroy", function() {
+        //TODO: I've cancelled the revoke of the download url if it doesn't give out memory leak issues we can delete this piece of code entirely
+        URL.revokeObjectURL($scope.vm.url);
+        $scope.vm.url = undefined;
+      });
 
 }]);
