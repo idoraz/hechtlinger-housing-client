@@ -1,4 +1,4 @@
-myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowServices', 'House', '$q', 'uiGmapGoogleMapApi', '$localStorage', '$filter', '$timeout', function ($scope, $rootScope, serverServices, zillowServices, House, $q, uiGmapGoogleMapApi, $localStorage, $filter, $timeout) {
+myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowServices', 'House', '$q', 'uiGmapGoogleMapApi', '$localStorage', '$filter', '$timeout', 'moment', function ($scope, $rootScope, serverServices, zillowServices, House, $q, uiGmapGoogleMapApi, $localStorage, $filter, $timeout, moment) {
 
     /**************
      *** Members ***
