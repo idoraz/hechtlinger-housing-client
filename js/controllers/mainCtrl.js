@@ -97,9 +97,10 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
     var parseToKml = function () {
 
+        $scope.vm.kmlFileName = `Houses ${moment().format('DD-MM-YYYY_HH:mm')}.kml`;
         let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         let currentMonth = months[new Date().getMonth()];
-        kml = [];
+        let kml = [];
 
         kml.push('<kml xmlns = "http://www.opengis.net/kml/2.2"><Document><name>');
         kml.push(currentMonth);
@@ -540,7 +541,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
                 $scope.vm.kml = parseToKml();
                 downloadKml();
 
-                $scope.vm.saveHouses();
+                $scope.vm.saveHouses(true);
                 $scope.vm.backupHouses();
                 $scope.vm.loading = false;
 

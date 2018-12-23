@@ -24,7 +24,7 @@
                 <button type="button" class="btn btn-warning" style="color: white;" ng-click="vm.saveHouses(true);" uib-popover="Download will be available for 2 minutes" popover-trigger="'mouseenter'">
                     Save Houses
                 </button>
-                <a download="houses.kml" ng-click="vm.downloadKml();" ng-href="{{ vm.url }}" target="_self" ng-disabled="!vm.url">
+                <a download="{{ kmlFileName }}" ng-click="vm.downloadKml();" ng-href="{{ vm.url }}" target="_self" ng-disabled="!vm.url">
                     <button type="button" class="btn btn-danger" >
                         Download KML
                     </button>
