@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'uiGmapgoogle-maps', 'ngSanitize', 'ngStorage', 'ui.bootstrap', 'angularMoment'])
+var myApp = angular.module('myApp', ['ngRoute', 'uiGmapgoogle-maps', 'ngSanitize', 'ngStorage', 'ui.bootstrap'])
     .config(function($routeProvider, uiGmapGoogleMapApiProvider, $sceDelegateProvider, $compileProvider) {
         $routeProvider
             .when("/", {
