@@ -1,6 +1,6 @@
 myApp.constant("moment", moment);
 
-myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowServices', 'House', '$q', 'uiGmapGoogleMapApi', '$localStorage', '$filter', '$timeout', function ($scope, $rootScope, serverServices, zillowServices, House, $q, uiGmapGoogleMapApi, $localStorage, $filter, $timeout) {
+myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowServices', 'House', '$q', 'uiGmapGoogleMapApi', '$localStorage', '$filter', '$timeout', 'moment', function ($scope, $rootScope, serverServices, zillowServices, House, $q, uiGmapGoogleMapApi, $localStorage, $filter, $timeout, moment) {
 
     /**************
      *** Members ***
@@ -38,7 +38,6 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     const docketRegex = /([A-Z])\w+-\d{2}-\d{6}/g; //Docket# regex - the anchor where our listing starts
     const addressRegex = /\b(p\.?\s?o\.?\b|post office|\d{1,5}|\s)\s*(?:\S\s*){8,50}(AK|Alaska|AL|Alabama|AR|Arkansas|AZ|Arizona|CA|California|CO|Colorado|CT|Connecticut|DC|Washington\sDC|Washington\D\.C\.|DE|Delaware|FL|Florida|GA|Georgia|GU|Guam|HI|Hawaii|IA|Iowa|ID|Idaho|IL|Illinois|IN|Indiana|KS|Kansas|KY|Kentucky|LA|Louisiana|MA|Massachusetts|MD|Maryland|ME|Maine|MI|Michigan|MN|Minnesota|MO|Missouri|MS|Mississippi|MT|Montana|NC|North\sCarolina|ND|North\sDakota|NE|New\sEngland|NH|New\sHampshire|NJ|New\sJersey|NM|New\sMexico|NV|Nevada|NY|New\sYork|OH|Ohio|OK|Oklahoma|OR|Oregon|PA|Pennsylvania|RI|Rhode\sIsland|SC|South\sCarolina|SD|South\sDakota|TN|Tennessee|TX|Texas|UT|Utah|VA|Virginia|VI|Virgin\sIslands|VT|Vermont|WA|Washington|WI|Wisconsin|WV|West\sVirginia|WY|Wyoming)(\s+|\&nbsp\;|\<(\S|\s){1,10}\>){1,5}\d{5}/i; //Address regex - the anchor where our listing ends
     const freeAndClearRegex = /F&C|F\s&\sC|FC|FREE\sAND\sCLEAR|FREE\s&\sCLEAR/gi;
-    let moment = new moment();
 
     /**************
      *** Methods ***
@@ -100,7 +99,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
     var parseToKml = function () {
 
-        $scope.vm.kmlFileName = `Houses ${moment().format('DD-MM-YYYY_HH:mm')}.kml`;
+        $scope.vm.kmlFileName = `Houses ${new moment().format('DD-MM-YYYY_HH:mm')}.kml`;
         let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         let currentMonth = months[new Date().getMonth()];
         let kml = [];
