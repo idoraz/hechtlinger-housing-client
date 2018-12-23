@@ -616,6 +616,6 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         //TODO: I've cancelled the revoke of the download url if it doesn't give out memory leak issues we can delete this piece of code entirely
         URL.revokeObjectURL($scope.vm.url);
         $scope.vm.url = undefined;
-      });
+    });
 
 }]);
