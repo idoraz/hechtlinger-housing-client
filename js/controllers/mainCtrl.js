@@ -99,7 +99,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
     var parseToKml = function () {
 
-        $scope.vm.kmlFileName = `Houses ${new moment().format('DD-MM-YYYY_HH:mm')}.kml`;
+        $scope.vm.kmlFileName = `Houses ${new moment().format('DD-MM-YYYYTHH-mm')}.kml`;
         let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         let currentMonth = months[new Date().getMonth()];
         let kml = [];
