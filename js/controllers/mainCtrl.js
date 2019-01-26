@@ -514,6 +514,9 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         $scope.vm.loading = true;
         $rootScope.houses = [];
         $rootScope.multiAddressHouses = [];
+        $localStorage.houses = [];
+        $localStorage.ppmnts = {};
+        $localStorage.bdlst = {};
 
         refresh().then(function () {
 
