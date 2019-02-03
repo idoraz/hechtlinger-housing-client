@@ -1,6 +1,6 @@
 myApp.constant("moment", moment);
 
-myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowServices', 'House', '$q', 'uiGmapGoogleMapApi', '$localStorage', '$filter', '$timeout', 'moment', function ($scope, $rootScope, serverServices, zillowServices, House, $q, uiGmapGoogleMapApi, $localStorage, $filter, $timeout, moment) {
+myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowServices', 'House', '$q', 'uiGmapGoogleMapApi', '$localStorage', '$filter', '$timeout', 'moment', '$window', function ($scope, $rootScope, serverServices, zillowServices, House, $q, uiGmapGoogleMapApi, $localStorage, $filter, $timeout, moment, $window) {
 
     /**************
      *** Members ***
