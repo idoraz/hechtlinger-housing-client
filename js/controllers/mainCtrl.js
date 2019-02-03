@@ -148,7 +148,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             let blob = new Blob([$scope.vm.kml], {
                 type: 'application/vnd.google-earth.kml+xml'
             });
-            $scope.vm.url = (window.URL || window.webkitURL).createObjectURL(blob);            
+            $scope.vm.url = (window.URL || window.webkitURL).createObjectURL(blob);
         } else {
             console.log('KML string is empty, download was aborted!');
         }
@@ -210,10 +210,37 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
     }
 
+    var findMaxOccurences = function(array) {
+        if (array.length == 0)
+            return null;
+        var modeMap = {};
+        var maxEl = array[0],
+            maxCount = 1;
+        for (var i = 0; i < array.length; i++) {
+            var el = array[i];
+            if (modeMap[el] == null)
+                modeMap[el] = 1;
+            else
+                modeMap[el]++;
+            if (modeMap[el] > maxCount) {
+                maxEl = el;
+                maxCount = modeMap[el];
+            }
+        }
+        return maxEl;
+    }
     var checkGlblPPDate = function () {
+        dates = [];
+        angular.forEach($rootScope.houses, function (house, key) {
+            if (house.isPP && house.ppDate && house.ppDate !== '') {
+                dates.push(house.ppDate);
+            }
+        });
+        const date = findMaxOccurences(dates);
+        $scope.glblPPDate = new Date(date);
 
-        if (!$scope.ppmnts || !$scope.ppmnts.Pages) return;
-        $scope.glblPPDate = new Date(Date.parse(unescape($scope.ppmnts.Pages[1].Texts[1].R[0].T)));
+        // if (!$scope.ppmnts || !$scope.ppmnts.Pages) return;
+        // $scope.glblPPDate = new Date(Date.parse(unescape($scope.ppmnts.Pages[1].Texts[1].R[0].T)));
     };
 
     var translatePDF = function (pages, isPP) {
@@ -595,7 +622,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
                     msg: 'Backup failed!'
                 });
             } else {
-                downloadBackup();                
+                downloadBackup();
             }
         });
     };
@@ -617,7 +644,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         $scope.vm.alerts.splice(index, 1);
     };
 
-    $scope.$on("$destroy", function() {
+    $scope.$on("$destroy", function () {
         //TODO: I've cancelled the revoke of the download url if it doesn't give out memory leak issues we can delete this piece of code entirely
         URL.revokeObjectURL($scope.vm.url);
         $scope.vm.url = undefined;
