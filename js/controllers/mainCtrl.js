@@ -210,7 +210,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
     }
 
-    var findMaxOccurences = function(array) {
+    var findMaxOccurences = function (array) {
         if (array.length == 0)
             return null;
         var modeMap = {};
@@ -581,6 +581,10 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
                     type: 'success',
                     msg: 'Houses were successfully updated!'
                 });
+
+                $timeout(function () {
+                    $window.location.reload();
+                }, 3000);
 
             });
 
