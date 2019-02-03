@@ -238,6 +238,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         });
         const date = findMaxOccurences(dates);
         $scope.glblPPDate = new Date(date);
+        console.log(`Global postponements date: ${$scope.glblPPDate}`);
 
         // if (!$scope.ppmnts || !$scope.ppmnts.Pages) return;
         // $scope.glblPPDate = new Date(Date.parse(unescape($scope.ppmnts.Pages[1].Texts[1].R[0].T)));
