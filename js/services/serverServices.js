@@ -15,6 +15,15 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
             return envs[env].url;
         },
 
+        getHousesNew: function () {
+            const url = 'http://localhost:3009/api/V1';
+            const auctionID = (moment().month() + 2).toString().padStart(2, '0') + moment().year().toString();
+            var promise = $http.get(`${url}/houses/getHouses/${auctionID}`).then(function (response) {
+                return response.data;
+            });
+            return promise;
+        },
+
         getHouses: function (link) {
 
             if (link && link !== "") {
@@ -35,7 +44,7 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
             var promise = $q.defer();
 
             const that = this;
-            
+
             //pdf2json lib need a timeout to grab the updated files
             setTimeout(function () {
                 promise.resolve($http.get(`${that.getEnvUrl(that.env)}/parseHouses`).then(function (response) {
@@ -72,7 +81,7 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
                 return promise;
             }*/
         },
-        getBidListJson: function() {
+        getBidListJson: function () {
 
             var promise = $http.get(`${this.getEnvUrl(this.env)}/getBidListJson`).then(function (response) {
                 return response.data;
@@ -114,7 +123,7 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
                 return response.data;
             });
             return promise;
-            
+
         },
         downloadBackup: function () {
 
@@ -122,7 +131,7 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
                 return response.data;
             });
             return promise;
-            
+
         },
         getLawFirmJson: function () {
             var promise = $http.get(`${this.getEnvUrl(this.env)}/getLawFirmJson`).then(function (response) {
@@ -152,6 +161,16 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
             });
             return promise;
 
+        },
+
+        saveHouses: function (houses) {
+            const url = 'http://localhost:3009/api/v1';
+            var promise = $http.post(`${url}/houses/saveHouses`, { houses }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                return error;
+            });
+            return promise;
         }
 
     };

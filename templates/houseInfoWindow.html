@@ -1,7 +1,7 @@
 <div class="markerInfoWindow">
 
     <p>
-        <span class="markerInfoWindow_label">Address: </span>{{parameter.zillowAddress}}
+        <span class="markerInfoWindow_label">Address: </span>{{parameter.zillowData.zillowAddress}}
     </p>
 
     <p>
@@ -10,23 +10,23 @@
     </p>
 
     <p>
-        <span class="markerInfoWindow_label">Sqft: </span>{{parameter.sqft | number:0}}
-        <span class="markerInfoWindow_label">Rooms: </span>{{parameter.rooms}}
-        <span class="markerInfoWindow_label">Baths: </span>{{parameter.bath}}
+        <span class="markerInfoWindow_label">Sqft: </span>{{parameter.zillowData.sqft | number:0}}
+        <span class="markerInfoWindow_label">Rooms: </span>{{parameter.zillowData.rooms}}
+        <span class="markerInfoWindow_label">Baths: </span>{{parameter.zillowData.bath}}
     </p>
 
     <p>
-        <span class="markerInfoWindow_label">Last Sold Price: </span>{{parameter.lastSoldPrice | currency:"$"}}
-        <span class="markerInfoWindow_label">Last Sold Date: </span>{{parameter.lastSoldDate}}
+        <span class="markerInfoWindow_label">Last Sold Price: </span>{{parameter.zillowData.lastSoldPrice | currency:"$":0}}
+        <span class="markerInfoWindow_label">Last Sold Date: </span>{{parameter.zillowData.lastSoldDate | date: 'MMM dd, yyyy'}}
     </p>
 
     <p>
-        <span class="markerInfoWindow_label">Tax Estimate: </span>{{parameter.taxAssessment | currency:"$"}}
-        <span class="markerInfoWindow_label">Zillow Estimate: </span>{{parameter.zillowEstimate | currency:"$"}}
+        <span class="markerInfoWindow_label">Tax Estimate: </span>{{parameter.zillowData.taxAssessment | currency:"$":0}}
+        <span class="markerInfoWindow_label">Zillow Estimate: </span>{{parameter.zillowData.zillowEstimate | currency:"$":0}}
     </p>
 
     <p>
-        <span class="markerInfoWindow_label">Zillow Link: </span><a href="{{parameter.zillowLink}}" target="_blank" role="button">{{parameter.zillowLink | limitTo:42}}...</a>
+        <span class="markerInfoWindow_label">Zillow Link: </span><a href="{{parameter.zillowData.zillowLink}}" target="_blank" role="button">{{parameter.zillowData.zillowLink | limitTo:42}}...</a>
     </p>
 
 </div>

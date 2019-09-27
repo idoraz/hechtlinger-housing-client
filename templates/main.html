@@ -4,20 +4,16 @@
         <div id="alertBox" class="col-lg-12" uib-alert ng-repeat="alert in vm.alerts" ng-class="'alert-' + (alert.type || 'warning')" close="vm.closeAlert($index)">{{alert.msg}}</div>
     </div>
 
-    <div class="fa-3x appLoader text-center" ng-show="vm.loading">
+    <!-- <div class="fa-3x appLoader text-center" ng-show="vm.loading">
         <i class="fas fa-spinner fa-spin" data-fa-transform="down-160"></i>        
-    </div>
+    </div> -->
 
     <div class="row">
         <div class="col-lg-12 text-center">
             <h1 class="mt-5">Pittsburgh Map</h1>
             <p class="lead">Update the map to see new houses - only available twice a day</p>
 
-            <div class="input-append">
-                <!--<input type="text" ng-model="vm.pdfPath"
-                placeholder="http://www.sheriffalleghenycounty.com/pdfs/bid_list/postpone.pdf"
-                class="form-control">-->
-
+            <div class="input-append" ng-hide="true">
                 <button type="button" class="btn btn-primary" ng-click="vm.updateHousesOnMap();">
                     Update Houses
                 </button>
@@ -48,7 +44,7 @@
                 <ui-gmap-markers
                         models='houses'
                         idKey="'auctionNumber'"
-                        coords="'coords'"
+                        coords="'zillowData.coords'"
                         type="'cluster'"
                         fit="true"
                         isLabel="true"
@@ -57,7 +53,7 @@
                 </ui-gmap-markers>
 
                 <ui-gmap-window
-                        coords="mapOptions.markers.selected.coords"
+                        coords="mapOptions.markers.selected.zillowData.coords"
                         show="windowOptions.show"
                         templateUrl="'templates/houseInfoWindow.html'"
                         templateParameter="mapOptions.markers.selected"

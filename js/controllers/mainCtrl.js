@@ -46,29 +46,41 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     $scope.init = function () {
         console.log($rootScope.houses); //For debugging        
         $scope.vm.loading = true;
-        checkGlblPPDate();
-        $scope.vm.kml = parseToKml();
-        downloadKml();
-        serverServices.getLawFirmJson().then(function (res) {
-            getJudgments();
-            $rootScope.lawFirmsIndex = {};
-            $rootScope.lawFirms = res;
-            let lawFirmsRegex = "";
-            for (var i = 0; i < res.length; i++) {
-                $rootScope.lawFirmsIndex[res[i]["Name on file"]] = i;
-                lawFirmsRegex += res[i]["Name on file"] + '|';
 
-            }
-            lawFirmsRegex = lawFirmsRegex.substring(0, lawFirmsRegex.length - 1);
-            $rootScope.lawFirmsRegex = new RegExp(lawFirmsRegex, 'gi');
-            refresh().then(function () {
-                $scope.vm.loading = false;
-            });
+        serverServices.getHousesNew().then(function (houses) {
+            $rootScope.houses = houses;
+            $scope.vm.saveHouses(true);
+            console.log(houses);
+            $scope.vm.loading = false;
+        }, function (error) {
+            console.log(error);
+            $scope.vm.loading = false;
         });
+
+        // checkGlblPPDate();
+        // $scope.vm.kml = parseToKml();
+        // downloadKml();
+        // serverServices.getLawFirmJson().then(function (res) {
+        //     getJudgments();
+        //     $rootScope.lawFirmsIndex = {};
+        //     $rootScope.lawFirms = res;
+        //     let lawFirmsRegex = "";
+        //     for (var i = 0; i < res.length; i++) {
+        //         $rootScope.lawFirmsIndex[res[i]["Name on file"]] = i;
+        //         lawFirmsRegex += res[i]["Name on file"] + '|';
+
+        //     }
+        //     lawFirmsRegex = lawFirmsRegex.substring(0, lawFirmsRegex.length - 1);
+        //     $rootScope.lawFirmsRegex = new RegExp(lawFirmsRegex, 'gi');
+        //     $scope.vm.getHouses();
+        //     refresh().then(function () {
+        //         $scope.vm.loading = false;
+        //     });
+        // });
 
     };
     var refresh = function (link) {
-
+        return;
         var deferred = $q.defer();
 
         try {
@@ -363,20 +375,20 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
         try {
             stream.push('<Placemark>');
-            stream.push('<name>', house.zillowAddress, '</name>');
+            stream.push('<name>', house.zillowData.zillowAddress, '</name>');
             stream.push('<styleUrl>', markerType, '</styleUrl>');
             stream.push('<ExtendedData>');
             stream.push('<Data name="Auction Number"><value>', house.auctionNumber, '</value></Data>');
             stream.push('<Data name="Sale Type"><value>', house.saleType, '</value></Data>');
             stream.push('<Data name="Judgment"><value>', $filter('currency')(house.judgment, '$', 2), '</value></Data>');
-            stream.push('<Data name="Tax Estimate"><value>', $filter('currency')(house.taxAssessment, '$', 2), '</value></Data>');
-            stream.push('<Data name="Zillow Estimate"><value>', $filter('currency')(house.zillowEstimate, '$', 2), '</value></Data>');
-            stream.push('<Data name="Last Sold Price"><value>', $filter('currency')(house.lastSoldPrice, '$', 2), '</value></Data>');
-            stream.push('<Data name="Last Sold Date"><value>', house.lastSoldDate, '</value></Data>');
-            stream.push('<Data name="Sqft"><value>', $filter('number')(house.sqft, 2), '</value></Data>');
-            stream.push('<Data name="Rooms"><value>', house.rooms, '</value></Data>');
-            stream.push('<Data name="Baths"><value>', house.bath, '</value></Data>');
-            stream.push('<Data name="Year Built"><value>', house.yearBuilt, '</value></Data>');
+            stream.push('<Data name="Tax Estimate"><value>', $filter('currency')(house.zillowData.taxAssessment, '$', 2), '</value></Data>');
+            stream.push('<Data name="Zillow Estimate"><value>', $filter('currency')(house.zillowData.zillowEstimate, '$', 2), '</value></Data>');
+            stream.push('<Data name="Last Sold Price"><value>', $filter('currency')(house.zillowData.lastSoldPrice, '$', 2), '</value></Data>');
+            stream.push('<Data name="Last Sold Date"><value>', house.zillowData.lastSoldDate, '</value></Data>');
+            stream.push('<Data name="Sqft"><value>', $filter('number')(house.zillowData.sqft, 2), '</value></Data>');
+            stream.push('<Data name="Rooms"><value>', house.zillowData.rooms, '</value></Data>');
+            stream.push('<Data name="Baths"><value>', house.zillowData.bath, '</value></Data>');
+            stream.push('<Data name="Year Built"><value>', house.zillowData.yearBuilt, '</value></Data>');
             stream.push('<Data name="Attorney Name"><value>', house.attorneyName, '</value></Data>');
             if (house.firmName) {
                 stream.push('<Data name="Firm Name"><value>', house.firmName, '</value></Data>');
@@ -388,7 +400,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             stream.push('<Data name="Cost Tax"><value>', house.costTax && house.costTax !== "" ? '$' + house.costTax : house.costTax, '</value></Data>');
             stream.push('<Data name="Checks"><value>', house.checks.svs + ' ' + house.checks['3129'] + ' ' + house.checks.ok, '</value></Data>');
             stream.push('<Data name="Docket Number"><value>', house.docketNumber, '</value></Data>');
-            stream.push('<Data name="Zillow Link"><value>', house.zillowLink, '</value></Data>');
+            stream.push('<Data name="Zillow Link"><value>', house.zillowData.zillowLink, '</value></Data>');
             stream.push('<Data name="Duplicate"><value>', house.isDuplicate, '</value></Data>');
             if (house.ppDate) {
                 let str = house.ppDate;
@@ -397,7 +409,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             }
             stream.push('</ExtendedData>');
             stream.push('<Point>');
-            stream.push('<coordinates>', house.coords.longitude, ',', house.coords.latitude, ',0</coordinates>');
+            stream.push('<coordinates>', house.zillowData.coords.longitude, ',', house.zillowData.coords.latitude, ',0</coordinates>');
             stream.push('</Point></Placemark>');
 
             return stream.join("");
@@ -536,7 +548,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
     $scope.closeClick = function () {
         $scope.windowOptions.show = false;
     };
-
+    
     $scope.vm.updateHousesOnMap = function () {
 
         $scope.vm.loading = true;
@@ -636,7 +648,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         $localStorage.ppmnts = $scope.ppmnts;
         $localStorage.bdlst = $scope.bdlst;
 
-        if (isProg) {
+        if (!isProg) {
             $scope.vm.alerts.push({
                 type: 'success',
                 msg: 'Houses were saved!'
