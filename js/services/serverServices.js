@@ -9,14 +9,14 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
                     url: "http://localhost:3004"
                 },
                 prod: {
-                    url: "http://18.223.26.231:3000"
+                    url: "http://34.207.175.86:3004"
                 }
             };
             return envs[env].url;
         },
 
         getHousesNew: function () {
-            const url = 'http://localhost:3009/api/V1';
+            const url = `${this.getEnvUrl(this.env)}:3009/api/V1`;
             const auctionID = (moment().month() + 2).toString().padStart(2, '0') + moment().year().toString();
             var promise = $http.get(`${url}/houses/getHouses/${auctionID}`).then(function (response) {
                 return response.data;
