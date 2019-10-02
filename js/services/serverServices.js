@@ -16,9 +16,8 @@ myApp.factory('serverServices', function ($http, $q, $templateCache) {
         },
 
         getHousesNew: function () {
-            const url = `${this.getEnvUrl(this.env)}:3009/api/V1`;
             const auctionID = (moment().month() + 2).toString().padStart(2, '0') + moment().year().toString();
-            var promise = $http.get(`${url}/houses/getHouses/${auctionID}`).then(function (response) {
+            var promise = $http.get(`http://localhost:3009/api/V1/houses/getHouses/${auctionID}`).then(function (response) {
                 return response.data;
             });
             return promise;
