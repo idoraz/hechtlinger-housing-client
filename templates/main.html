@@ -13,6 +13,17 @@
             <h1 class="mt-5">Pittsburgh Map</h1>
             <p class="lead">Update the map to see new houses - only available twice a day</p>
 
+            <div class="input-append">
+                <button type="button" class="btn btn-primary" ng-click="reload();" ng-disabled="vm.loading">
+                    <span ng-show="!vm.loading">                        
+                        Update Houses
+                    </span>
+                    <span ng-show="vm.loading">
+                        <i class="fa fa-spinner fa-spin fa-fw"></i>
+                        Updating...
+                    </span>
+                </button>
+            </div>
             <div class="input-append" ng-hide="true">
                 <button type="button" class="btn btn-primary" ng-click="vm.updateHousesOnMap();">
                     Update Houses
@@ -44,7 +55,7 @@
                 <ui-gmap-markers
                         models='houses'
                         idKey="'auctionNumber'"
-                        coords="'zillowData.coords'"
+                        coords="'coords'"
                         type="'cluster'"
                         fit="true"
                         isLabel="true"
@@ -53,7 +64,7 @@
                 </ui-gmap-markers>
 
                 <ui-gmap-window
-                        coords="mapOptions.markers.selected.zillowData.coords"
+                        coords="mapOptions.markers.selected.coords"
                         show="windowOptions.show"
                         templateUrl="'templates/houseInfoWindow.html'"
                         templateParameter="mapOptions.markers.selected"

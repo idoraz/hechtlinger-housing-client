@@ -45,17 +45,8 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
 
     $scope.init = function () {
         console.log($rootScope.houses); //For debugging        
-        $scope.vm.loading = true;
+        $scope.reload();
 
-        serverServices.getHousesNew().then(function (houses) {
-            $rootScope.houses = houses;
-            $scope.vm.saveHouses(true);
-            console.log(houses);
-            $scope.vm.loading = false;
-        }, function (error) {
-            console.log(error);
-            $scope.vm.loading = false;
-        });
 
         // checkGlblPPDate();
         // $scope.vm.kml = parseToKml();
@@ -79,6 +70,21 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         // });
 
     };
+
+    $scope.reload = () => {
+        $scope.vm.loading = true;
+
+        serverServices.getHousesNew().then(function (houses) {
+            $rootScope.houses = houses;
+            $scope.vm.saveHouses(true);
+            console.log(houses);
+            $scope.vm.loading = false;
+        }, function (error) {
+            console.log(error);
+            $scope.vm.loading = false;
+        });
+    }
+
     var refresh = function (link) {
         return;
         var deferred = $q.defer();
@@ -409,7 +415,7 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
             }
             stream.push('</ExtendedData>');
             stream.push('<Point>');
-            stream.push('<coordinates>', house.zillowData.coords.longitude, ',', house.zillowData.coords.latitude, ',0</coordinates>');
+            stream.push('<coordinates>', house.coords.longitude, ',', house.coords.latitude, ',0</coordinates>');
             stream.push('</Point></Placemark>');
 
             return stream.join("");
