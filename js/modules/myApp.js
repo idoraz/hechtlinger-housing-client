@@ -3,7 +3,7 @@ if (window) {
     Object.assign(env, window.__env);
 }
 
-var myApp = angular.module('myApp', ['ngRoute', 'uiGmapgoogle-maps', 'ngSanitize', 'ngStorage', 'ui.bootstrap'])
+var myApp = angular.module('myApp', ['ngRoute', 'uiGmapgoogle-maps', 'ngSanitize', 'ngStorage', 'ui.bootstrap', 'ngFileSaver'])
     .config(function($routeProvider, uiGmapGoogleMapApiProvider, $sceDelegateProvider, $compileProvider) {
         $routeProvider
             .when("/", {
