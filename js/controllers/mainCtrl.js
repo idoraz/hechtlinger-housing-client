@@ -85,6 +85,14 @@ myApp.controller('mainCtrl', ['$scope', '$rootScope', 'serverServices', 'zillowS
         });
     }
 
+    $scope.downloadKmlFile = () => {
+        serverServices.downloadMap().then(function (file) {
+            console.log('File was downloaded!');
+        }, function (error) {
+            console.log(error);
+        });
+    }
+
     var refresh = function (link) {
         return;
         var deferred = $q.defer();

@@ -1,10 +1,27 @@
-myApp.factory('serverServices', function ($http, $q, $templateCache, __env) {
+myApp.factory('serverServices', function ($http, $q, $templateCache, __env, FileSaver) {
     var myService = {
 
         getHousesNew: function () {
             const auctionID = (moment().month() + 2).toString().padStart(2, '0') + moment().year().toString();
             var promise = $http.get(`${__env.apiUrl}:${__env.apiPort}/api/V1/houses/getHouses/${auctionID}`).then(function (response) {
                 return response.data;
+            });
+            return promise;
+        },
+
+        downloadMap: function () {
+            var promise = $http({
+                url: `${__env.apiUrl}:${__env.apiPort}/api/V1/houses/downloadMap`,
+                method: "POST",
+                responseType: 'blob'
+            }).then(function (response) {
+                var data = response.data;
+                var headers = response.headers;
+                var blob = new Blob([data], { type: 'application/vnd.google-earth.kml+xml' });
+                var fileName = headers('Content-Disposition');
+                return FileSaver.saveAs(blob, fileName);
+            }).catch(function (response) {
+              console.log('Unable to download the kml file')
             });
             return promise;
         },
@@ -156,7 +173,7 @@ myApp.factory('serverServices', function ($http, $q, $templateCache, __env) {
                 return error;
             });
             return promise;
-        }
+        }        
 
     };
     return myService;
