@@ -1,23 +1,9 @@
-myApp.factory('serverServices', function ($http, $q, $templateCache) {
+myApp.factory('serverServices', function ($http, $q, $templateCache, __env) {
     var myService = {
-
-        env: "dev",
-
-        getEnvUrl: function (env) {
-            const envs = {
-                dev: {
-                    url: "http://localhost:3004"
-                },
-                prod: {
-                    url: "http://34.207.175.86:3004"
-                }
-            };
-            return envs[env].url;
-        },
 
         getHousesNew: function () {
             const auctionID = (moment().month() + 2).toString().padStart(2, '0') + moment().year().toString();
-            var promise = $http.get(`http://localhost:3009/api/V1/houses/getHouses/${auctionID}`).then(function (response) {
+            var promise = $http.get(`${__env.apiUrl}:${__env.apiPort}/api/V1/houses/getHouses/${auctionID}`).then(function (response) {
                 return response.data;
             });
             return promise;

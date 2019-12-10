@@ -1,3 +1,8 @@
+var env = {};
+if (window) {
+    Object.assign(env, window.__env);
+}
+
 var myApp = angular.module('myApp', ['ngRoute', 'uiGmapgoogle-maps', 'ngSanitize', 'ngStorage', 'ui.bootstrap'])
     .config(function($routeProvider, uiGmapGoogleMapApiProvider, $sceDelegateProvider, $compileProvider) {
         $routeProvider
@@ -15,3 +20,5 @@ var myApp = angular.module('myApp', ['ngRoute', 'uiGmapgoogle-maps', 'ngSanitize
         ]);
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
     });
+
+    myApp.constant('__env', env);
