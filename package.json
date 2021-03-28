@@ -1,0 +1,24 @@
+{
+    "name": "hechtlinger-housing-client",
+    "private": true,
+    "version": "1.0.0",
+    "description": "Angular js client application for HH",
+    "main": "index.html",
+    "scripts": {
+        "start": "http-server -o",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/idoraz/hechtlinger-housing-client.git"
+    },
+    "author": "Ido Raz",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/idoraz/hechtlinger-housing-client/issues"
+    },
+    "homepage": "https://github.com/idoraz/hechtlinger-housing-client#readme",
+    "dependencies": {
+        "http-server": "^0.12.3"
+    }
+}
