@@ -22,7 +22,7 @@ myApp.factory(
                         `${__env.apiUrl}:${__env.apiPort}/api/V1/houses/downloadMap`,
                         {
                             auctionId:
-                                (moment().month() + 2)
+                                (moment().month() + 1)
                                     .toString()
                                     .padStart(2, '0') +
                                 moment().year().toString()
